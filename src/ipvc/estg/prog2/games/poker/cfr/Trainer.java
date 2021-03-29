@@ -5,11 +5,14 @@ import ipvc.estg.prog2.misc.RandomSingleton;
 import java.util.Arrays;
 import java.util.TreeMap;
 
+/**
+ * Código retirado de: http://modelai.gettysburg.edu/2013/cfr/
+ */
 public class Trainer {
     public static final int PASS = 0, BET = 1, NUM_ACTIONS = 2;
     public TreeMap<String, Node> nodeMap = new TreeMap<>();
 
-    class Node {
+    public class Node {
         String infoSet;
         double[] regretSum = new double[NUM_ACTIONS],
                 strategy = new double[NUM_ACTIONS],

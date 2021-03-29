@@ -29,4 +29,8 @@ public class RandomSingleton {
     public static float nextFloat() {
         return rnd.nextFloat();
     }
+
+    public static Random getInstance() {
+        return rnd;
+    }
 }

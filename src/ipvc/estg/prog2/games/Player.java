@@ -8,6 +8,11 @@ public abstract class Player<ActionType, StateType extends State<ActionType, Res
     private String name;
 
     /**
+     * Posição na mesa
+     */
+    private int currentPos;
+
+    /**
      * nome do jogador
      * @param name
      */
@@ -36,9 +41,8 @@ public abstract class Player<ActionType, StateType extends State<ActionType, Res
 
     /**
      * Método que notifica o jogador que iniciou um novo jogo
-     * @param position posição na mesa (de 0 até número de jogadores)
      */
-    public abstract void eventNewGame(int position);
+    public abstract void eventNewGame();
 
     /**
      * Método que notifica o jogador que algum jogador fez determinada ação.
@@ -61,4 +65,12 @@ public abstract class Player<ActionType, StateType extends State<ActionType, Res
      * @param finalState último estado visível do jogo
      */
     public abstract void eventEndGame(StateType finalState);
+
+    public int getCurrentPos() {
+        return currentPos;
+    }
+
+    public void setCurrentPos(int currentPos) {
+        this.currentPos = currentPos;
+    }
 }

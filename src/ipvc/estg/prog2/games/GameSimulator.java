@@ -102,7 +102,8 @@ public abstract class GameSimulator<
 
         // notifica os jogadores que o jogo começou
         for(int pos = 0; pos < players.length; ++pos) {
-            players[pos].eventNewGame(pos);
+            players[pos].setCurrentPos(pos);
+            players[pos].eventNewGame();
         }
 
         //play a turn
@@ -127,6 +128,9 @@ public abstract class GameSimulator<
             }
         }
 
+        // informa o estado de um evento antes dos resultados
+        this.beforeEndGame(state);
+
         // notifica os jogadores do resultado que cada jogador obteve
         // notifica igualmente o fim do jogo
         for(PlayerType player : players) {
@@ -135,7 +139,22 @@ public abstract class GameSimulator<
             }
             player.eventEndGame(state.getClone());
         }
+
+        // informa o estado de um evento antes dos resultados
+        this.endGame(state);
     }
+
+    /**
+     * Executado quando o jogo é terminado
+     * @param state estado final
+     */
+    protected void endGame(StateType state) {}
+
+    /**
+     * Executado antes de um jogo terminar
+     * @param state estado final
+     */
+    protected void beforeEndGame(StateType state) {}
 
     /**
      * Imprime estatísticas para todos os jogadores
@@ -159,4 +178,8 @@ public abstract class GameSimulator<
     public PlayerType[] getPlayerPositions() {
         return this.permutations.get(this.currentPermutation);
     }
+
+    /**
+     *
+     */
 }

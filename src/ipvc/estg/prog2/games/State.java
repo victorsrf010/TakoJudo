@@ -58,4 +58,10 @@ public abstract class State<ActionType, ResultType, StateType extends State<Acti
      * @return resultado do jogador na posição @pos
      */
     public abstract ResultType getResult(int pos);
+
+    /**
+     * executado antes de comunicar os resultados aos jogadores
+     */
+    public void beforeResults() {
+    }
 }
