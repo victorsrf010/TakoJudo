@@ -4,6 +4,7 @@ public abstract class Connect4Player extends ipvc.estg.prog2.games.Player<Connec
 
     private int[] stats;
     private int games;
+    private int currentPos;
 
     public Connect4Player(String name) {
         super(name);
@@ -11,23 +12,27 @@ public abstract class Connect4Player extends ipvc.estg.prog2.games.Player<Connec
         this.games = 0;
     }
 
-
-
-    /*
-
-    public void startGame(char color) {
+    @Override
+    public void eventNewGame(int position) {
         this.games++;
-        eventNewGame(color);
+        this.currentPos = position;
     }
 
-    public void endGame(Connect4State state, Result result) {
-        this.stats[result.ordinal()]++;
-        eventEndGame(state, result);
+    @Override
+    public void eventResult(int playerPos, Connect4Result result)
+    {
+        if(playerPos == this.currentPos) {
+            this.stats[result.ordinal()]++;
+        }
     }
 
-    public abstract void eventNewGame(char color);
-    public abstract void eventEndGame(Connect4State state, Result result);
-    public abstract void eventAction(char playingColor, int play);*/
+    /**
+     * Obtem a posição atual do jogador na mesa
+     * @return
+     */
+    public int getCurrentPos() {
+        return this.currentPos;
+    }
 
     @Override
     public void printStats() {

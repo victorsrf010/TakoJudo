@@ -113,7 +113,7 @@ public class Connect4State extends State<Connect4Action, Connect4Result, Connect
         int column = action.getCol();
 
         //valid column?
-        if (column < 0 || column > this.grid[0].length){
+        if (column < 0 || column > this.nCols){
             return false;
         }
 
@@ -150,17 +150,38 @@ public class Connect4State extends State<Connect4Action, Connect4Result, Connect
         switch (this.grid[row][col]) {
             case 0:
                 System.out.print('R');
+                break;
             case 1:
                 System.out.print('B');
+                break;
             default:
                 System.out.print(' ');
+                break;
         }
+    }
+
+    private void displayNumbers() {
+        for(int col = 0; col < this.nCols; ++col) {
+            if(col < 10) {
+                System.out.print(" ");
+            }
+            System.out.print(col);
+        }
+        System.out.println();
+    }
+
+    private void displaySeparator() {
+        for(int col = 0; col < this.nCols; ++col) {
+            System.out.print("--");
+        }
+        System.out.println("-");
     }
 
     @Override
     public void display() {
-        System.out.println(" 0 1 2 3 4 5 6");
-        System.out.println("---------------");
+        this.displayNumbers();
+        this.displaySeparator();
+
         for (int row = 0; row < grid.length; row++){
             System.out.print("|");
             for (int col = 0; col < grid[0].length; col++){
@@ -168,15 +189,20 @@ public class Connect4State extends State<Connect4Action, Connect4Result, Connect
                 System.out.print("|");
             }
             System.out.println();
-            System.out.println("---------------");
+            this.displaySeparator();
         }
-        System.out.println(" 0 1 2 3 4 5 6");
+
+        this.displayNumbers();
         System.out.println();
+    }
+
+    private boolean isFull() {
+        return this.turnsCount > (this.nCols * this.nRows);
     }
 
     @Override
     public boolean isFinished() {
-        return this.winner || this.turnsCount > 42;
+        return this.winner || this.isFull();
     }
 
     @Override
@@ -200,6 +226,20 @@ public class Connect4State extends State<Connect4Action, Connect4Result, Connect
 
     @Override
     public Connect4Result getResult(int pos) {
+        if(this.winner) {
+            return pos == this.actingPlayer ? Connect4Result.LOOSE : Connect4Result.WIN;
+        }
+        if(this.isFull()) {
+            return Connect4Result.DRAW;
+        }
         return null;
+    }
+
+    public int getnRows() {
+        return nRows;
+    }
+
+    public int getnCols() {
+        return nCols;
     }
 }

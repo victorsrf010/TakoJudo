@@ -1,7 +1,5 @@
 package ipvc.estg.prog2.games;
 
-import ipvc.estg.prog2.games.poker.PokerAction;
-
 public abstract class Player<ActionType, StateType extends State<ActionType, ResultType, StateType>, ResultType> {
 
     /**
@@ -9,6 +7,10 @@ public abstract class Player<ActionType, StateType extends State<ActionType, Res
      */
     private String name;
 
+    /**
+     * nome do jogador
+     * @param name
+     */
     public Player(String name) {
         this.name = name;
     }
