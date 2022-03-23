@@ -13,6 +13,7 @@ class State(ABC):
     """
     Checks if an action can be performed in the current state and returns true if so
     :param action: action that we want to validate
+    :return bool:
     """
     @abstractmethod
     def validate_action(self, action) -> bool:
@@ -22,7 +23,7 @@ class State(ABC):
     Updates the game state with an action (if valid, check validate_action)
     """
     @abstractmethod
-    def __update(self, action):
+    def update(self, action):
         pass
 
     """
@@ -54,7 +55,7 @@ class State(ABC):
     def play(self, action) -> bool:
         if not self.validate_action(action):
             return False
-        self.__update(action)
+        self.update(action)
         return True
 
     """

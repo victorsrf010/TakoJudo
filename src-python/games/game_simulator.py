@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-from collections import Sequence
-from functools import reduce
 
 from games.player import Player
 from games.state import State
@@ -24,9 +22,10 @@ class GameSimulator(ABC):
     Adapted from https://www.geeksforgeeks.org/heaps-algorithm-for-generating-permutations/
     It allows for generating all possible permutations of seats in a game
     """
+
     def heap_permutation(self, a: list, size: int):
         if size == 1:
-            self.__permutations.push(a.copy())
+            self.__permutations.append(a.copy())
 
         for i in range(0, size):
             self.heap_permutation(a, size - 1)
@@ -56,23 +55,26 @@ class GameSimulator(ABC):
         - iteration 6: z,y,x
         - iteration 6: x,y,z (back to the initial configuration)
     """
+
     def change_player_positions(self):
-        self.current_permutation += 1
-        if self.current_permutation >= len(self.permutations):
-            self.current_permutation = 0
+        self.__current_permutation += 1
+        if self.__current_permutation >= len(self.__permutations):
+            self.__current_permutation = 0
 
     """
     starts a new game
     """
+
     @abstractmethod
-    def __init_game(self) -> State:
+    def init_game(self) -> State:
         pass
 
     """
     event before a game ends
     """
+
     @abstractmethod
-    def __before_end_game(self, state):
+    def before_end_game(self, state):
         pass
 
     """
@@ -80,11 +82,12 @@ class GameSimulator(ABC):
     """
 
     @abstractmethod
-    def __end_game(self, state):
+    def end_game(self, state):
         pass
 
     """
     """
+
     def get_player_positions(self):
         return self.__permutations[self.__current_permutation]
 
@@ -92,8 +95,8 @@ class GameSimulator(ABC):
     runs the simulation
     """
     def run_simulation(self):
-        state = self.__init_game()
-        players = self.get_player_positions();
+        state = self.init_game()
+        players = self.get_player_positions()
 
         # notify players a new game is starting
         for pos in range(0, len(players)):
@@ -102,23 +105,23 @@ class GameSimulator(ABC):
 
         # play a turn
         while not state.is_finished():
-            action = None
+            selected_action = None
             pos = state.get_acting_player()
 
             # obtain a valid action
             while True:
-                action = players[pos].get_action(state.clone())
-                if state.validate_action():
+                selected_action = players[pos].get_action(state.clone())
+                if state.validate_action(selected_action):
                     break
 
-            state.play(action)
+            state.play(selected_action)
 
             # notify players of the action
             for player in players:
-                player.event_action(pos, action, state.clone())
+                player.event_action(pos, selected_action, state.clone())
 
         # handler to run before the game ends
-        self.__before_end_game(state)
+        self.before_end_game(state)
 
         # notify all players of the result each player got
         for player in players:
@@ -127,7 +130,7 @@ class GameSimulator(ABC):
             player.event_end_game(state.clone())
 
         # handler to run after a game ends
-        self.__end_game(state)
+        self.end_game(state)
 
     # prints the stats for all players
     def print_stats(self):
