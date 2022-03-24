@@ -183,3 +183,6 @@ class Connect4State(State):
 
     def get_num_cols(self):
         return self.__num_cols
+
+    def before_results(self):
+        pass

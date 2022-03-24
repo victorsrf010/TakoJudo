@@ -68,11 +68,13 @@ class State(ABC):
     Retrieves the game result for a player in a given position
     :param pos: position of the player in the game [0, num_players[
     """
+    @abstractmethod
     def get_result(self, pos):
         pass
 
     """
     this handler is executed before the results are communicated to the players
     """
+    @abstractmethod
     def before_results(self):
         pass

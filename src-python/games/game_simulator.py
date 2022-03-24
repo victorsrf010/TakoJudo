@@ -144,3 +144,7 @@ class GameSimulator(ABC):
     # returns the ordered list of players for the current permutation
     def get_player_positions(self):
         return self.__permutations[self.__current_permutation]
+
+    # gets the number os players
+    def num_players(self):
+        return len(self.__permutations[0])
