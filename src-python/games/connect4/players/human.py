@@ -1,5 +1,4 @@
-
-
+from games.connect4.action import Connect4Action
 from games.connect4.player import Connect4Player
 from games.connect4.state import Connect4State
 
@@ -14,7 +13,7 @@ class HumanConnect4Player(Connect4Player):
         while True:
             # noinspection PyBroadException
             try:
-                return int(input(f"Player {state.get_acting_player()}, choose a column: "))
+                return Connect4Action(int(input(f"Player {state.get_acting_player()}, choose a column: ")))
             except Exception:
                 continue
 

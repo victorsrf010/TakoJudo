@@ -123,34 +123,34 @@ class Connect4State(State):
             0:                              'R',
             1:                              'B',
             Connect4State.EMPTY_CELL:       ' '
-        }[self.__grid[row][col]])
+        }[self.__grid[row][col]], end="")
 
     def __display_numbers(self):
         for col in range(0, self.__num_cols):
             if col < 10:
-                print(' ')
-            print(col)
-        print("\n")
+                print(' ', end="")
+            print(col, end="")
+        print("")
 
     def __display_separator(self):
         for col in range(0, self.__num_cols):
-            print("--")
-        print("-\n")
+            print("--", end="")
+        print("-")
 
     def display(self):
         self.__display_numbers()
         self.__display_separator()
 
         for row in range(0, self.__num_rows):
-            print('|')
+            print('|', end="")
             for col in range(0, self.__num_cols):
                 self.__display_cell(row, col)
-                print('|')
-            print("\n")
+                print('|', end="")
+            print("")
             self.__display_separator()
 
         self.__display_numbers()
-        print("\n")
+        print("")
 
     def __is_full(self):
         return self.__turns_count > (self.__num_cols * self.__num_rows)
