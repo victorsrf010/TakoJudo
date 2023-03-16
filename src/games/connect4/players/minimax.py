@@ -131,7 +131,7 @@ class MinimaxConnect4Player(Connect4Player):
             return value
 
     def get_action(self, state: Connect4State):
-        return self.minimax(state, 3)
+        return self.minimax(state, 5)
 
     def event_action(self, pos: int, action, new_state: State):
         # ignore
