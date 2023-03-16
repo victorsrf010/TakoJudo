@@ -1,6 +1,5 @@
-import sys
+import math
 
-from games.connect4.action import Connect4Action
 from games.connect4.player import Connect4Player
 from games.connect4.result import Connect4Result
 from games.connect4.state import Connect4State
@@ -90,13 +89,13 @@ class MinimaxConnect4Player(Connect4Player):
     to optimize the search :param is_initial_node: if true, the function will return the action with max ev, 
     otherwise it return the max ev (ev = expected value) """
 
-    def minimax(self, state: Connect4State, depth: int, alpha: int = -sys.maxsize, beta: int = sys.maxsize,
+    def minimax(self, state: Connect4State, depth: int, alpha: int = -math.inf, beta: int = math.inf,
                 is_initial_node: bool = True):
         # first we check if we are in a terminal node (victory, draw or loose)
         if state.is_finished():
             return {
-                Connect4Result.WIN: 4,
-                Connect4Result.LOOSE: -4,
+                Connect4Result.WIN: 40,
+                Connect4Result.LOOSE: -40,
                 Connect4Result.DRAW: 0
             }[state.get_result(self.get_current_pos())]
 
@@ -107,43 +106,32 @@ class MinimaxConnect4Player(Connect4Player):
         # if we are the acting player
         if self.get_current_pos() == state.get_acting_player():
             # very small integer
-            value = -sys.maxsize
-            selected_pos = -1
+            value = -math.inf
+            selected_action = None
 
-            for pos in range(0, state.get_num_cols()):
-                action = Connect4Action(pos)
-                if state.validate_action(action):
-                    previous_a = value
-                    next_state = state.clone()
-                    next_state.play(action)
-                    value = max(value, self.minimax(next_state, depth - 1, alpha, beta, False))
-                    alpha = max(alpha, value)
+            for action in state.get_possible_actions():
+                pre_value = value
+                value = max(value, self.minimax(state.sim_play(action), depth - 1, alpha, beta, False))
+                if value > pre_value:
+                    selected_action = action
+                if value > beta:
+                    break
+                alpha = max(alpha, value)
 
-                    if value >= previous_a:
-                        selected_pos = pos
-                    if alpha >= beta:
-                        break
+            return selected_action if is_initial_node else value
 
-            if is_initial_node:
-                return selected_pos
-            return value
         # if it is the opponent's turn
         else:
-            # very big integer
-            value = sys.maxsize
-            for pos in range(0, state.get_num_cols()):
-                action = Connect4Action(pos)
-                if state.validate_action(action):
-                    next_state = state.clone()
-                    next_state.play(action)
-                    value = min(value, self.minimax(next_state, depth - 1, alpha, beta, False))
-                    beta = min(beta, value)
-                    if beta <= alpha:
-                        break
+            value = math.inf
+            for action in state.get_possible_actions():
+                value = min(value, self.minimax(state.sim_play(action), depth - 1, alpha, beta, False))
+                if value < alpha:
+                    break
+                beta = min(beta, value)
             return value
 
     def get_action(self, state: Connect4State):
-        return Connect4Action(self.minimax(state, 5))
+        return self.minimax(state, 3)
 
     def event_action(self, pos: int, action, new_state: State):
         # ignore

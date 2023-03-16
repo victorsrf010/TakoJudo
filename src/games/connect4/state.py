@@ -6,7 +6,6 @@ from games.state import State
 
 
 class Connect4State(State):
-
     EMPTY_CELL = -1
 
     def __init__(self, num_rows: int = 6, num_cols: int = 7):
@@ -120,10 +119,10 @@ class Connect4State(State):
 
     def __display_cell(self, row, col):
         print({
-            0:                              'R',
-            1:                              'B',
-            Connect4State.EMPTY_CELL:       ' '
-        }[self.__grid[row][col]], end="")
+                  0: 'R',
+                  1: 'B',
+                  Connect4State.EMPTY_CELL: ' '
+              }[self.__grid[row][col]], end="")
 
     def __display_numbers(self):
         for col in range(0, self.__num_cols):
@@ -186,3 +185,16 @@ class Connect4State(State):
 
     def before_results(self):
         pass
+
+    def get_possible_actions(self):
+        return list(filter(
+            lambda action: self.validate_action(action),
+            map(
+                lambda pos: Connect4Action(pos),
+                range(0, self.get_num_cols()))
+        ))
+
+    def sim_play(self, action):
+        new_state = self.clone()
+        new_state.play(action)
+        return new_state
