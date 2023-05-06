@@ -1,11 +1,15 @@
 # Artificial Intelligence | Informatics Engineering [@IPVC/ESTG](https://www.ipvc.pt/estg/)  #
 Teachers: [Jorge Ribeiro](mailto:jribeiro@estg.ipvc.pt) and [Luís Teófilo](mailto:luisteofilo@estg.ipvc.pt)
-___
+
+
+
 ### The game: Tako Judo ###
 
 Tako Judo is a turn-based strategy board game for 2 players, played on an 8x8 board. Players control octopuses and try to pin down their opponent's octopus by moving their own octopus and tentacles. The game is won by the first player to pin their opponent's octopus head and all of their tentacles, or if the opponent is unable to move.
 
 This project provides a Python implementation of Tako Judo, including game logicand some AI players with different strategies. The game logic is designed using object-oriented programming (OOP) principles, making it easy to extend and customize.
+
+
 
 ### How did I setup my development environment? ###
 
