@@ -1,6 +1,6 @@
-from src.games.takojudo.action import TakoJudoAction
-from src.games.takojudo.player import TakoJudoPlayer
-from src.games.takojudo.state import TakoJudoState
+from games.takojudo.action import TakoJudoAction
+from games.takojudo.state import TakoJudoState
+from games.takojudo.player import TakoJudoPlayer
 
 
 class HumanTakoJudoPlayer(TakoJudoPlayer):
@@ -13,7 +13,11 @@ class HumanTakoJudoPlayer(TakoJudoPlayer):
         while True:
             # noinspection PyBroadException
             try:
-                return TakoJudoAction(int(input(f"Player {state.get_acting_player()}, choose a column: ")))
+                row = int(input(f"Player {self.get_name()}, choose a row: "))
+                col = int(input(f"Player {self.get_name()}, choose a column: "))
+                dest_row = int(input(f"Player {self.get_name()}, choose a destination row: "))
+                dest_col = int(input(f"Player {self.get_name()}, choose a destination column: "))
+                return TakoJudoAction(col, row, dest_col, dest_row)
             except Exception:
                 continue
 

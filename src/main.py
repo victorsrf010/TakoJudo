@@ -10,6 +10,7 @@ from games.poker.players.cfr import CFRKuhnPokerPlayer
 from games.poker.players.random import RandomKuhnPokerPlayer
 from games.poker.simulator import KuhnPokerSimulator
 from src.games.takojudo.players.human import HumanTakoJudoPlayer
+from src.games.takojudo.players.random import RandomTakoJudoPlayer
 from src.games.takojudo.simulator import TakoJudoSimulator
 
 
@@ -33,7 +34,7 @@ def main():
         {
             "name": "TakoJudo - Human VS Random",
             "player1": HumanTakoJudoPlayer("Human"),
-            "player2": HumanTakoJudoPlayer("Human")
+            "player2": RandomTakoJudoPlayer("Robot")
         }
     ]
 
@@ -128,6 +129,7 @@ def main():
 
     for sim in tj_simulations:
         run_simulation(sim["name"], TakoJudoSimulator(sim["player1"], sim["player2"]), num_iterations)
+
 
 if __name__ == "__main__":
     main()

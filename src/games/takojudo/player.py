@@ -1,7 +1,7 @@
 from abc import ABC
 
-from games.takojudo.result import TakoJudoResult
 from games.player import Player
+from games.takojudo.result import TakoJudoResult
 
 
 class TakoJudoPlayer(Player, ABC):
@@ -13,8 +13,8 @@ class TakoJudoPlayer(Player, ABC):
         stats is a dictionary that will store the number of times each result occurred
         """
         self.__stats = {}
-        for tjres in TakoJudoResult:
-            self.__stats[tjres] = 0
+        for c4res in TakoJudoResult:
+            self.__stats[c4res] = 0
 
         """
         here we are storing the number of games
