@@ -30,9 +30,9 @@ class TakoJudoState(State):
         self.__grid[1][5] = 0
         self.__grid[0][5] = 0
         self.__grid[0][3] = 1
-        self.__grid[1][3] = 1
-        self.__grid[0][4] = 1
-        self.__grid[1][4] = 1
+        self.__grid[1][3] = 4
+        self.__grid[0][4] = 4
+        self.__grid[1][4] = 4
 
         self.__grid[7][2] = 2
         self.__grid[6][2] = 2
@@ -42,12 +42,24 @@ class TakoJudoState(State):
         self.__grid[5][5] = 2
         self.__grid[6][5] = 2
         self.__grid[7][5] = 2
-        self.__grid[7][3] = 3
+        self.__grid[7][3] = 5
         self.__grid[6][3] = 3
-        self.__grid[7][4] = 3
-        self.__grid[6][4] = 3
+        self.__grid[7][4] = 5
+        self.__grid[6][4] = 5
 
+        self.__head1 = {
+            self.__grid[0][3],
+            self.__grid[1][3],
+            self.__grid[0][4],
+            self.__grid[1][4]
+        }
 
+        self.__head2 = {
+            self.__grid[7][3],
+            self.__grid[6][3],
+            self.__grid[7][4],
+            self.__grid[6][4]
+        }
 
         """
         counts the number of turns in the current game
@@ -121,13 +133,31 @@ class TakoJudoState(State):
         # Get the piece at the starting position
         piece = self.__grid[piece_row][piece_col]
 
+        if piece == 1:
+            self.__grid[dest_row][dest_col] = piece
+            self.__grid[dest_row][dest_col + 1] = 4
+            self.__grid[dest_row + 1][dest_col] = 4
+            self.__grid[dest_row + 1][dest_col + 1] = 4
+
+            self.__grid[piece_row][piece_col] = TakoJudoState.EMPTY_CELL
+            self.__grid[piece_row][piece_col + 1] = TakoJudoState.EMPTY_CELL
+            self.__grid[piece_row + 1][piece_col] = TakoJudoState.EMPTY_CELL
+            self.__grid[piece_row + 1][piece_col + 1] = TakoJudoState.EMPTY_CELL
+
+        if piece == 3:
+            self.__grid[dest_row][dest_col] = piece
+            self.__grid[dest_row][dest_col + 1] = 5
+            self.__grid[dest_row + 1][dest_col] = 5
+            self.__grid[dest_row + 1][dest_col + 1] = 5
+
+            self.__grid[piece_row][piece_col] = TakoJudoState.EMPTY_CELL
+            self.__grid[piece_row][piece_col + 1] = TakoJudoState.EMPTY_CELL
+            self.__grid[piece_row + 1][piece_col] = TakoJudoState.EMPTY_CELL
+            self.__grid[piece_row + 1][piece_col + 1] = TakoJudoState.EMPTY_CELL
+
         # Move the piece to the destination cell
         self.__grid[dest_row][dest_col] = piece
         self.__grid[piece_row][piece_col] = TakoJudoState.EMPTY_CELL
-
-        # Update the position of the piece
-        # piece.row = dest_row
-        # piece.col = dest_col
 
         # Determine if there is a winner
         self.__has_winner = self.__check_winner(self.__acting_player)
@@ -144,9 +174,10 @@ class TakoJudoState(State):
                   1: 'H',
                   2: 't',
                   3: 'h',
+                  4: 'O',
+                  5: 'o',
                   TakoJudoState.EMPTY_CELL: ' '
               }[self.__grid[row][col]], end="")
-
 
     def __display_numbers(self):
         for col in range(0, self.__num_cols):
@@ -167,7 +198,7 @@ class TakoJudoState(State):
 
         for row in range(0, self.__num_rows):
             print(f'{row_number}| ', end="")
-            row_number+=1
+            row_number += 1
             for col in range(0, self.__num_cols):
                 self.__display_cell(row, col)
                 print(' | ', end="")
