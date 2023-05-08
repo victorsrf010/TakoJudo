@@ -78,34 +78,71 @@ class TakoJudoState(State):
 
     def __check_winner(self, player):
         # check if the player's octopus head and all of their tentacles are pinned
-        head_pinned = True
-        tentacles_pinned = True
-        for i in range(-1, 2):
-            for j in range(-1, 2):
-                if i == 0 and j == 0:
-                    # skip checking the head position
-                    continue
-                row = 0
-                col = 1
-                if 0 <= row < self.__num_rows and 0 <= col < self.__num_cols:
-                    if self.__grid[row][col] == TakoJudoState.EMPTY_CELL:
-                        # at least one tentacle can move, so octopus is not pinned
-                        tentacles_pinned = False
-                    elif self.__grid[row][col] != player:
-                        # octopus is pinned if a non-empty cell belongs to the opponent
-                        head_pinned = True
-                        tentacles_pinned = True
+        head1_pinned = False
+        head2_pinned = False
+
+
+        head1_row, head1_col = None, None
+        head2_row, head2_col = None, None
+
+        for row1 in range(self.__num_rows):
+            for col1 in range(self.__num_cols):
+                if self.__grid[row1][col1] == 1:
+                    head1_row, head1_col = row1, col1
+                    print(head1_row, head1_col)
+                    if (self.__grid[head1_row][head1_col - 1] or self.__grid[head1_row + 1][head1_col - 1]) == 2 and (self.__grid[head1_row + 2][head1_col] or self.__grid[head1_row + 2][head1_col + 1]) == 2 and (self.__grid[head1_row][head1_col + 2] or self.__grid[head1_row + 1][head1_col + 2]) == 2:
+                        head1_pinned = True
+                    else:
                         break
-                else:
-                    # octopus is pinned if any part of it is out of bounds
-                    head_pinned = True
-                    tentacles_pinned = True
-                    break
-            if head_pinned or tentacles_pinned:
+            if head1_row is not None:
                 break
 
-        # octopus is pinned if both the head and all tentacles are pinned
-        return head_pinned and tentacles_pinned
+        for row2 in range(self.__num_rows):
+            for col2 in range(self.__num_cols):
+                if self.__grid[row2][col2] == 3:
+                    head2_row, head2_col = row2, col2
+                    print(head2_row, head2_col)
+                    if (self.__grid[head2_row][head2_col - 1] or self.__grid[head2_row + 1][head2_col - 1]) == 0 and (self.__grid[head2_row - 1][head2_col] or self.__grid[head2_row - 1][head2_col + 1]) == 0 and (self.__grid[head2_row][head2_col + 2] or self.__grid[head2_row - 1][head2_col + 2]) == 0:
+                        head2_pinned = True
+                    else:
+                        break
+            if head2_row is not None:
+                break
+
+        if head1_pinned or head2_pinned:
+            return True
+        else:
+            return False
+
+
+        # head_pinned = True
+        # tentacles_pinned = True
+        # for i in range(-1, 2):
+        #     for j in range(-1, 2):
+        #         if i == 0 and j == 0:
+        #             # skip checking the head position
+        #             continue
+        #         row = 0
+        #         col = 1
+        #         if 0 <= row < self.__num_rows and 0 <= col < self.__num_cols:
+        #             if self.__grid[row][col] == TakoJudoState.EMPTY_CELL:
+        #                 # at least one tentacle can move, so octopus is not pinned
+        #                 tentacles_pinned = False
+        #             elif self.__grid[row][col] != player:
+        #                 # octopus is pinned if a non-empty cell belongs to the opponent
+        #                 head_pinned = True
+        #                 tentacles_pinned = True
+        #                 break
+        #         else:
+        #             # octopus is pinned if any part of it is out of bounds
+        #             head_pinned = True
+        #             tentacles_pinned = True
+        #             break
+        #     if head_pinned or tentacles_pinned:
+        #         break
+        #
+        # # octopus is pinned if both the head and all tentacles are pinned
+        # return head_pinned and tentacles_pinned
 
     def get_grid(self):
         return self.__grid
@@ -115,8 +152,22 @@ class TakoJudoState(State):
 
     def validate_action(self, action: TakoJudoAction) -> bool:
         # get the destination position of the piece being moved
+        row = action.get_row()
+        col = action.get_col()
         dest_row = action.get_dest_row()
         dest_col = action.get_dest_col()
+
+        # check if selected cell is valid
+        if self.__grid[row][col] == TakoJudoState.EMPTY_CELL:
+            return False
+
+        # check if the piece is the head of the octopus
+        if self.__grid[row][col] in [1, 3]:
+            #check if the surrounding cells are also empty
+            if self.__grid[dest_row][dest_col] == TakoJudoState.EMPTY_CELL and self.__grid[dest_row][dest_col +1] == TakoJudoState.EMPTY_CELL and self.__grid[dest_row + 1][dest_col] == TakoJudoState.EMPTY_CELL and self.__grid[dest_row + 1][dest_col + 1] == TakoJudoState.EMPTY_CELL:
+                return True
+            else:
+                return False
 
         # check if the destination cell is empty
         if self.__grid[dest_row][dest_col] == TakoJudoState.EMPTY_CELL:

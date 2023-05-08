@@ -34,7 +34,7 @@ def main():
         {
             "name": "TakoJudo - Human VS Random",
             "player1": HumanTakoJudoPlayer("Human"),
-            "player2": RandomTakoJudoPlayer("Robot")
+            "player2": HumanTakoJudoPlayer("Robot")
         }
     ]
 
