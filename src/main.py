@@ -9,6 +9,7 @@ from games.poker.players.always_pass import AlwaysPassKuhnPokerPlayer
 from games.poker.players.cfr import CFRKuhnPokerPlayer
 from games.poker.players.random import RandomKuhnPokerPlayer
 from games.poker.simulator import KuhnPokerSimulator
+from src.games.takojudo.players.greedy import GreedyTakoJudoPlayer
 from src.games.takojudo.players.human import HumanTakoJudoPlayer
 from src.games.takojudo.players.random import RandomTakoJudoPlayer
 from src.games.takojudo.simulator import TakoJudoSimulator
@@ -28,44 +29,59 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
 def main():
     print("ESTG IA Games Simulator")
 
-    num_iterations = 1000
+    num_iterations = 100
 
     tj_simulations = [
+        # {
+        #     "name": "TakoJudo - Human VS Human",
+        #     "player1": HumanTakoJudoPlayer("Human1"),
+        #     "player2": HumanTakoJudoPlayer("Human2")
+        # },
         {
             "name": "TakoJudo - Human VS Random",
             "player1": HumanTakoJudoPlayer("Human"),
-            "player2": HumanTakoJudoPlayer("Robot")
-        }
+            "player2": RandomTakoJudoPlayer("Robot")
+        },
+        # {
+        #     "name": "TakoJudo - Random VS Random",
+        #     "player1": RandomTakoJudoPlayer("Robot1"),
+        #     "player2": RandomTakoJudoPlayer("Robot2")
+        # },
+        # {
+        #     "name": "TakoJudo - Human VS Greedy",
+        #     "player1": HumanTakoJudoPlayer("Human"),
+        #     "player2": GreedyTakoJudoPlayer("Robot")
+        # }
     ]
 
-    # c4_simulations = [
-    #     # uncomment to play as human
-    #     {
-    #        "name": "Connect4 - Human VS Random",
-    #        "player1": HumanConnect4Player("Human"),
-    #        "player2": RandomConnect4Player("Random")
-    #     },
-    #     {
-    #         "name": "Connect4 - Random VS Random",
-    #         "player1": RandomConnect4Player("Random 1"),
-    #         "player2": RandomConnect4Player("Random 2")
-    #     },
-    #     {
-    #         "name": "Connect4 - Greedy VS Random",
-    #         "player1": GreedyConnect4Player("Greedy"),
-    #         "player2": RandomConnect4Player("Random")
-    #     },
-    #     {
-    #         "name": "Minimax VS Random",
-    #         "player1": MinimaxConnect4Player("Minimax"),
-    #         "player2": RandomConnect4Player("Random")
-    #     },
-    #     {
-    #         "name": "Minimax VS Greedy",
-    #         "player1": MinimaxConnect4Player("Minimax"),
-    #         "player2": GreedyConnect4Player("Greedy")
-    #     }
-    # ]
+    c4_simulations = [
+        # uncomment to play as human
+        # {
+        #    "name": "Connect4 - Human VS Random",
+        #    "player1": HumanConnect4Player("Human"),
+        #    "player2": RandomConnect4Player("Random")
+        # },
+        # {
+        #     "name": "Connect4 - Random VS Random",
+        #     "player1": RandomConnect4Player("Random 1"),
+        #     "player2": RandomConnect4Player("Random 2")
+        # },
+        # {
+        #     "name": "Connect4 - Greedy VS Random",
+        #     "player1": GreedyConnect4Player("Greedy"),
+        #     "player2": RandomConnect4Player("Random")
+        # },
+        # {
+        #     "name": "Minimax VS Random",
+        #     "player1": MinimaxConnect4Player("Minimax"),
+        #     "player2": RandomConnect4Player("Random")
+        # },
+        # {
+        #     "name": "Minimax VS Greedy",
+        #     "player1": MinimaxConnect4Player("Minimax"),
+        #     "player2": GreedyConnect4Player("Greedy")
+        # }
+    ]
     #
     # poker_simulations = [
     #     # uncomment to play as human

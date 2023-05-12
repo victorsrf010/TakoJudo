@@ -8,6 +8,74 @@ from games.state import State
 class TakoJudoState(State):
     EMPTY_CELL = -1
 
+    # def __init__(self, num_rows: int = 8, num_cols: int = 8):
+    #     super().__init__()
+    #
+    #     """
+    #     the dimensions of the board
+    #     """
+    #     self.__num_rows = num_rows
+    #     self.__num_cols = num_cols
+    #
+    #     """
+    #     the grid
+    #     """
+    #     self.__grid = [[TakoJudoState.EMPTY_CELL for _i in range(self.__num_cols)] for _j in range(self.__num_rows)]
+    #     self.__grid[0][2] = 0
+    #     self.__grid[1][2] = 0
+    #     self.__grid[2][2] = 0
+    #     self.__grid[2][3] = 0
+    #     self.__grid[2][4] = 0
+    #     self.__grid[2][5] = 0
+    #     self.__grid[1][5] = 0
+    #     self.__grid[0][5] = 0
+    #     self.__grid[0][3] = 1
+    #     self.__grid[1][3] = 4
+    #     self.__grid[0][4] = 4
+    #     self.__grid[1][4] = 4
+    #
+    #     self.__grid[7][2] = 2
+    #     self.__grid[6][2] = 2
+    #     self.__grid[5][2] = 2
+    #     self.__grid[5][3] = 2
+    #     self.__grid[5][4] = 2
+    #     self.__grid[5][5] = 2
+    #     self.__grid[6][5] = 2
+    #     self.__grid[7][5] = 2
+    #     self.__grid[7][3] = 5
+    #     self.__grid[6][3] = 3
+    #     self.__grid[7][4] = 5
+    #     self.__grid[6][4] = 5
+    #
+    #     self.__head1 = {
+    #         self.__grid[0][3],
+    #         self.__grid[1][3],
+    #         self.__grid[0][4],
+    #         self.__grid[1][4]
+    #     }
+    #
+    #     self.__head2 = {
+    #         self.__grid[7][3],
+    #         self.__grid[6][3],
+    #         self.__grid[7][4],
+    #         self.__grid[6][4]
+    #     }
+    #
+    #     """
+    #     counts the number of turns in the current game
+    #     """
+    #     self.__turns_count = 1
+    #
+    #     """
+    #     the index of the current acting player
+    #     """
+    #     self.__acting_player = 0
+    #
+    #     """
+    #     determine if a winner was found already
+    #     """
+    #     self.__has_winner = False
+
     def __init__(self, num_rows: int = 8, num_cols: int = 8):
         super().__init__()
 
@@ -77,10 +145,9 @@ class TakoJudoState(State):
         self.__has_winner = False
 
     def __check_winner(self, player):
-        # check if the player's octopus head and all of their tentacles are pinned
+        # check if the player's octopus head is pinned
         head1_pinned = False
         head2_pinned = False
-
 
         head1_row, head1_col = None, None
         head2_row, head2_col = None, None
@@ -88,61 +155,144 @@ class TakoJudoState(State):
         for row1 in range(self.__num_rows):
             for col1 in range(self.__num_cols):
                 if self.__grid[row1][col1] == 1:
-                    head1_row, head1_col = row1, col1
-                    print(head1_row, head1_col)
-                    if (self.__grid[head1_row][head1_col - 1] or self.__grid[head1_row + 1][head1_col - 1]) == 2 and (self.__grid[head1_row + 2][head1_col] or self.__grid[head1_row + 2][head1_col + 1]) == 2 and (self.__grid[head1_row][head1_col + 2] or self.__grid[head1_row + 1][head1_col + 2]) == 2:
-                        head1_pinned = True
-                    else:
-                        break
-            if head1_row is not None:
-                break
+                    head1_row = row1
+                    head1_col = col1
 
         for row2 in range(self.__num_rows):
             for col2 in range(self.__num_cols):
                 if self.__grid[row2][col2] == 3:
-                    head2_row, head2_col = row2, col2
-                    print(head2_row, head2_col)
-                    if (self.__grid[head2_row][head2_col - 1] or self.__grid[head2_row + 1][head2_col - 1]) == 0 and (self.__grid[head2_row - 1][head2_col] or self.__grid[head2_row - 1][head2_col + 1]) == 0 and (self.__grid[head2_row][head2_col + 2] or self.__grid[head2_row - 1][head2_col + 2]) == 0:
-                        head2_pinned = True
-                    else:
-                        break
-            if head2_row is not None:
-                break
+                    head2_row = row2
+                    head2_col = col2
+
+        #check if the octopus is in a corner
+        if head1_row == 0 and head1_col == 0:
+            if ((self.__grid[head1_row + 2][head1_col] == 2 or self.__grid[head1_row + 2][head1_col + 1] == 2)
+                    and (self.__grid[head1_row][head1_col + 2] == 2 or self.__grid[head1_row + 1][head1_col + 2] == 2)):
+                head1_pinned = True
+                self.__acting_player = player
+
+        elif head1_row == 6 and head1_col == 0:
+            if ((self.__grid[head1_row - 1][head1_col] == 2 or self.__grid[head1_row - 1][head1_col + 1] == 2)
+                    and (self.__grid[head1_row][head1_col + 2] == 2 or self.__grid[head1_row + 1][head1_col + 2] == 2)):
+                head1_pinned = True
+                self.__acting_player = player
+
+        elif head1_row == 6 and head1_col == 6:
+            if ((self.__grid[head1_row - 1][head1_col] == 2 or self.__grid[head1_row - 1][head1_col + 1] == 2)
+                    and (self.__grid[head1_row][head1_col - 1] == 2 or self.__grid[head1_row + 1][head1_col - 1] == 2)):
+                head1_pinned = True
+                self.__acting_player = player
+
+        elif head1_row == 0 and head1_col == 6:
+            if ((self.__grid[head1_row + 2][head1_col] == 2 or self.__grid[head1_row + 2][head1_col + 1] == 2)
+                    and (self.__grid[head1_row][head1_col - 1] == 2 or self.__grid[head1_row + 1][head1_col - 1] == 2)):
+                head1_pinned = True
+                self.__acting_player = player
+
+        #check if the octopus is against a border of the board
+        elif head1_row == 0:
+            if ((self.__grid[head1_row][head1_col - 1] == 2 or self.__grid[head1_row + 1][head1_col - 1] == 2)
+                    and (self.__grid[head1_row + 2][head1_col] == 2 or self.__grid[head1_row + 2][head1_col + 1] == 2)
+                    and (self.__grid[head1_row][head1_col + 2] == 2 or self.__grid[head1_row + 1][head1_col + 2] == 2)):
+                head1_pinned = True
+                self.__acting_player = player
+
+        elif head1_row == 6:
+            if ((self.__grid[head1_row][head1_col - 1] == 2 or self.__grid[head1_row + 1][head1_col - 1] == 2)
+                    and (self.__grid[head1_row - 1][head1_col] == 2 or self.__grid[head1_row - 1][head1_col + 1] == 2)
+                    and (self.__grid[head1_row][head1_col + 2] == 2 or self.__grid[head1_row + 1][head1_col + 2] == 2)):
+                head1_pinned = True
+                self.__acting_player = player
+
+        elif head1_col == 0:
+            if ((self.__grid[head1_row + 2][head1_col] == 2 or self.__grid[head1_row + 2][head1_col + 1] == 2)
+                    and (self.__grid[head1_row][head1_col + 2] == 2 or self.__grid[head1_row + 1][head1_col + 2] == 2)
+                    and (self.__grid[head1_row - 1][head1_col] == 2 or self.__grid[head1_row - 1][head1_col + 1] == 2)):
+                head1_pinned = True
+                self.__acting_player = player
+
+        elif head1_col == 6:
+            if ((self.__grid[head1_row + 2][head1_col] == 2 or self.__grid[head1_row + 2][head1_col + 1] == 2)
+                    and (self.__grid[head1_row][head1_col - 1] == 2 or self.__grid[head1_row + 1][head1_col - 1] == 2)
+                    and (self.__grid[head1_row - 1][head1_col] == 2 or self.__grid[head1_row - 1][head1_col + 1] == 2)):
+                head1_pinned = True
+                self.__acting_player = player
+
+        elif head1_col in [1, 2, 3, 4, 5] and head1_row in [1, 2, 3, 4, 5]:
+            if ((self.__grid[head1_row][head1_col - 1] == 2 or self.__grid[head1_row + 1][head1_col - 1] == 2)
+                    and (self.__grid[head1_row + 2][head1_col] == 2 or self.__grid[head1_row + 2][head1_col + 1] == 2)
+                    and (self.__grid[head1_row][head1_col + 2] == 2 or self.__grid[head1_row + 1][head1_col + 2] == 2)
+                    and (self.__grid[head1_row - 1][head1_col] == 2 or self.__grid[head1_row - 1][head1_col + 1] == 2)):
+                head1_pinned = True
+                self.__acting_player = player
+
+        # check if the octopus is in a corner
+        if head2_row == 0 and head2_col == 0:
+            if ((self.__grid[head2_row + 2][head2_col] == 0 or self.__grid[head2_row + 2][head2_col + 1] == 0)
+                    and (self.__grid[head2_row][head2_col + 2] == 0 or self.__grid[head2_row + 1][head2_col + 2] == 0)):
+                head2_pinned = True
+                self.__acting_player = player
+
+        elif head2_row == 6 and head2_col == 0:
+            if ((self.__grid[head2_row - 1][head2_col] == 0 or self.__grid[head2_row - 1][head2_col + 1] == 0)
+                    and (self.__grid[head2_row][head2_col + 2] == 0 or self.__grid[head2_row + 1][head2_col + 2] == 0)):
+                head2_pinned = True
+                self.__acting_player = player
+
+        elif head2_row == 6 and head2_col == 6:
+            if ((self.__grid[head2_row - 1][head2_col] == 0 or self.__grid[head2_row - 1][head2_col + 1] == 0)
+                    and (self.__grid[head2_row][head2_col - 1] == 0 or self.__grid[head2_row + 1][head2_col - 1] == 0)):
+                head2_pinned = True
+                self.__acting_player = player
+
+        elif head2_row == 0 and head2_col == 6:
+            if ((self.__grid[head2_row + 2][head2_col] == 0 or self.__grid[head2_row + 2][head2_col + 1] == 0)
+                    and (self.__grid[head2_row][head2_col - 1] == 0 or self.__grid[head2_row + 1][head2_col - 1] == 0)):
+                head2_pinned = True
+                self.__acting_player = player
+
+        # check if the octopus is against a border of the board
+        elif head2_row == 0:
+            if ((self.__grid[head2_row][head2_col - 1] == 0 or self.__grid[head2_row + 1][head2_col - 1] == 0)
+                    and (self.__grid[head2_row + 2][head2_col] == 0 or self.__grid[head2_row + 2][head2_col + 1] == 0)
+                    and (self.__grid[head2_row][head2_col + 2] == 0 or self.__grid[head2_row + 1][head2_col + 2] == 0)):
+                head2_pinned = True
+                self.__acting_player = player
+
+        elif head2_row == 6:
+            if ((self.__grid[head2_row][head2_col - 1] == 0 or self.__grid[head2_row + 1][head2_col - 1] == 0)
+                    and (self.__grid[head2_row - 1][head2_col] == 0 or self.__grid[head2_row - 1][head2_col + 1] == 0)
+                    and (self.__grid[head2_row][head2_col + 2] == 0 or self.__grid[head2_row + 1][head2_col + 2] == 0)):
+                head2_pinned = True
+                self.__acting_player = player
+
+        elif head2_col == 0:
+            if ((self.__grid[head2_row + 2][head2_col] == 0 or self.__grid[head2_row + 2][head2_col + 1] == 0)
+                    and (self.__grid[head2_row][head2_col + 2] == 0 or self.__grid[head2_row + 1][head2_col + 2] == 0)
+                    and (self.__grid[head2_row - 1][head2_col] == 0 or self.__grid[head2_row - 1][head2_col + 1] == 0)):
+                head2_pinned = True
+                self.__acting_player = player
+
+        elif head2_col == 6:
+            if ((self.__grid[head2_row + 2][head2_col] == 0 or self.__grid[head2_row + 2][head2_col + 1] == 0)
+                    and (self.__grid[head2_row][head2_col - 1] == 0 or self.__grid[head2_row + 1][head2_col - 1] == 0)
+                    and (self.__grid[head2_row - 1][head2_col] == 0 or self.__grid[head2_row - 1][head2_col + 1] == 0)):
+                head2_pinned = True
+                self.__acting_player = player
+
+        elif head2_col in [1, 2, 3, 4, 5] and head2_row in [1, 2, 3, 4, 5]:
+            if ((self.__grid[head2_row][head2_col - 1] == 0 or self.__grid[head2_row + 1][head2_col - 1] == 0)
+                    and (self.__grid[head2_row + 2][head2_col] == 0 or self.__grid[head2_row + 2][head2_col + 1] == 0)
+                    and (self.__grid[head2_row][head2_col + 2] == 0 or self.__grid[head2_row + 1][head2_col + 2] == 0)
+                    and (self.__grid[head2_row - 1][head2_col] == 0 or self.__grid[head2_row - 1][head2_col + 1] == 0)):
+                head2_pinned = True
+                self.__acting_player = player
 
         if head1_pinned or head2_pinned:
             return True
         else:
             return False
 
-
-        # head_pinned = True
-        # tentacles_pinned = True
-        # for i in range(-1, 2):
-        #     for j in range(-1, 2):
-        #         if i == 0 and j == 0:
-        #             # skip checking the head position
-        #             continue
-        #         row = 0
-        #         col = 1
-        #         if 0 <= row < self.__num_rows and 0 <= col < self.__num_cols:
-        #             if self.__grid[row][col] == TakoJudoState.EMPTY_CELL:
-        #                 # at least one tentacle can move, so octopus is not pinned
-        #                 tentacles_pinned = False
-        #             elif self.__grid[row][col] != player:
-        #                 # octopus is pinned if a non-empty cell belongs to the opponent
-        #                 head_pinned = True
-        #                 tentacles_pinned = True
-        #                 break
-        #         else:
-        #             # octopus is pinned if any part of it is out of bounds
-        #             head_pinned = True
-        #             tentacles_pinned = True
-        #             break
-        #     if head_pinned or tentacles_pinned:
-        #         break
-        #
-        # # octopus is pinned if both the head and all tentacles are pinned
-        # return head_pinned and tentacles_pinned
 
     def get_grid(self):
         return self.__grid
@@ -158,13 +308,20 @@ class TakoJudoState(State):
         dest_col = action.get_dest_col()
 
         # check if selected cell is valid
-        if self.__grid[row][col] == TakoJudoState.EMPTY_CELL:
+        if self.__grid[row][col] in [TakoJudoState.EMPTY_CELL, 4, 5]:
             return False
 
         # check if the piece is the head of the octopus
         if self.__grid[row][col] in [1, 3]:
+
+            if dest_row >=7 or dest_col >=7:
+                return False
+
             #check if the surrounding cells are also empty
-            if self.__grid[dest_row][dest_col] == TakoJudoState.EMPTY_CELL and self.__grid[dest_row][dest_col +1] == TakoJudoState.EMPTY_CELL and self.__grid[dest_row + 1][dest_col] == TakoJudoState.EMPTY_CELL and self.__grid[dest_row + 1][dest_col + 1] == TakoJudoState.EMPTY_CELL:
+            if (self.__grid[dest_row][dest_col] == TakoJudoState.EMPTY_CELL
+                and self.__grid[dest_row][dest_col +1] == TakoJudoState.EMPTY_CELL
+                and self.__grid[dest_row + 1][dest_col] == TakoJudoState.EMPTY_CELL
+                and self.__grid[dest_row + 1][dest_col + 1] == TakoJudoState.EMPTY_CELL):
                 return True
             else:
                 return False
@@ -185,6 +342,7 @@ class TakoJudoState(State):
         piece = self.__grid[piece_row][piece_col]
 
         if piece == 1:
+
             self.__grid[dest_row][dest_col] = piece
             self.__grid[dest_row][dest_col + 1] = 4
             self.__grid[dest_row + 1][dest_col] = 4
@@ -196,6 +354,7 @@ class TakoJudoState(State):
             self.__grid[piece_row + 1][piece_col + 1] = TakoJudoState.EMPTY_CELL
 
         if piece == 3:
+
             self.__grid[dest_row][dest_col] = piece
             self.__grid[dest_row][dest_col + 1] = 5
             self.__grid[dest_row + 1][dest_col] = 5

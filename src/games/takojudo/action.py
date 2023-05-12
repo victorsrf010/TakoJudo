@@ -24,3 +24,5 @@ class TakoJudoAction:
 
     def get_dest_row(self):
         return self.__dest_row
+
+
