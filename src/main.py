@@ -29,7 +29,7 @@ def run_simulation(desc: str, simulator: GameSimulator, iterations: int):
 def main():
     print("ESTG IA Games Simulator")
 
-    num_iterations = 100
+    num_iterations = 1000
 
     tj_simulations = [
         # {
@@ -37,16 +37,16 @@ def main():
         #     "player1": HumanTakoJudoPlayer("Human1"),
         #     "player2": HumanTakoJudoPlayer("Human2")
         # },
-        {
-            "name": "TakoJudo - Human VS Random",
-            "player1": HumanTakoJudoPlayer("Human"),
-            "player2": RandomTakoJudoPlayer("Robot")
-        },
         # {
-        #     "name": "TakoJudo - Random VS Random",
-        #     "player1": RandomTakoJudoPlayer("Robot1"),
-        #     "player2": RandomTakoJudoPlayer("Robot2")
+        #     "name": "TakoJudo - Human VS Random",
+        #     "player1": HumanTakoJudoPlayer("Human"),
+        #     "player2": RandomTakoJudoPlayer("Robot")
         # },
+        {
+            "name": "TakoJudo - Random VS Random",
+            "player1": RandomTakoJudoPlayer("Robot1"),
+            "player2": RandomTakoJudoPlayer("Robot2")
+        },
         # {
         #     "name": "TakoJudo - Human VS Greedy",
         #     "player1": HumanTakoJudoPlayer("Human"),
